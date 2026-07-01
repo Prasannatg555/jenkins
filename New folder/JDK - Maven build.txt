@@ -1,0 +1,105 @@
+Step 1 >> cd /opt
+sudo wget https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.13+11/OpenJDK17U-jdk_x64_linux_hotspot_17.0.13_11.tar.gz
+
+
+Step 2 >> Then extract it:
+cmd : sudo tar -xvzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.13_11.tar.gz
+
+o/p - This will create a folder like:
+
+/opt/jdk-17.0.13+11
+
+
+Check it:
+
+cmd : ls /opt
+
+JAVA_HOME Path
+
+It will be:
+
+/opt/jdk-17.0.13+11
+
+Step 3 >> Next — Add to Jenkins Tools
+
+Manage Jenkins
+
+Tools / Global Tool Configuration
+
+Under JDK → Add JDK
+
+Fill:
+
+Name: JDK17
+
+
+JAVA_HOME: /opt/jdk-17.0.13+11
+
+
+✔ Uncheck “Install automatically”
+
+Save.
+
+Step 4 >> STEP 2 — Restart Jenkins
+
+Sometimes Jenkins doesn’t load tools until restart.
+
+Run this:
+
+cmd : sudo systemctl restart jenkins
+
+Step 5 >> Step 5 >> If dropdown still not visible:
+
+Run this command to confirm Jenkins reads the path:
+
+sudo -u jenkins ls /opt/jdk-17.0.13+11
+
+
+And share the output.
+
+If Jenkins cannot read the folder, we fix permissions.
+
+Run:
+
+sudo chown -R jenkins:jenkins /opt/jdk-17.0.13+11
+
+Step 6 >>  FIX 4 — Ensure the plugin is installed
+
+Even though you said “JDK Tool Plugin is not available”, it must exist in your Jenkins.
+Let’s confirm with a command:
+
+cmd : sudo ls /var/lib/jenkins/plugins | grep jdk
+
+
+If you get:
+
+jdk-tool
+
+
+Then plugin is installed.
+
+If not installed, you must install manually:
+
+Manual Install (If missing)
+cmd : cd /var/lib/jenkins/plugins
+sudo wget https://updates.jenkins.io/latest/jdk-tool.hpi
+sudo systemctl restart jenkins
+
+Step 7 >> When you ran this command:
+
+sudo ls /var/lib/jenkins/plugins | grep jdk
+
+
+You saw:
+
+jdk-tool
+jdk-tool.hpi
+
+
+This confirmed the JDK Tool plugin was installed
+
+Step 7 >> Running that command forced Jenkins to detect the plugin
+
+Jenkins scans the plugins directory after a restart, so when you restarted Jenkins:
+
+cmd : sudo systemctl restart jenkins
